@@ -126,58 +126,6 @@ Wanderlust/
 
 ---
 
-# ⚙️ Installation
-
-### Clone the repository
-
-```bash
-git clone https://github.com/palaksrivastava2311/Wanderlust.git
-```
-
-### Move into the project directory
-
-```bash
-cd Wanderlust
-```
-
-### Install dependencies
-
-```bash
-npm install
-```
-
-### Create a `.env` file
-
-```env
-ATLASDB_URL=your_mongodb_connection_string
-
-SECRET=your_session_secret
-
-CLOUD_NAME=your_cloudinary_cloud_name
-CLOUD_API_KEY=your_cloudinary_api_key
-CLOUD_API_SECRET=your_cloudinary_api_secret
-```
-
-### Start the development server
-
-```bash
-npm start
-```
-
-or
-
-```bash
-npm run dev
-```
-
-Open your browser:
-
-```
-http://localhost:8080
-```
-
----
-
 # 📸 Screenshots
 
 Screenshots will be added after project completion.
