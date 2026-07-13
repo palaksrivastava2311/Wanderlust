@@ -1,4 +1,6 @@
 const Listing = require("../models/listing");
+const axios = require("axios");
+
 module.exports.index = async (req,res)=>{
  const allListings = await Listing.find({});
  res.render("listings/index.ejs", {allListings});
@@ -33,6 +35,26 @@ module.exports.createListing = async (req,res, next)=>{
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = {url, filename};
+    let response = await axios.get(
+        "https://api.geoapify.com/v1/geocode/search",{
+            params:{
+                text: req.body.listing.location,
+                apiKey: process.env.GEOAPIFY_KEY,
+            }
+        }
+    );
+    if(response.data.features.length[0]){
+        throw new ExpressError(404,"Location not found");
+    }
+    let result = response.data.features[0];
+    let [lon, lat] = result.geometry.coordinates;
+    newListing.geometry = {
+        type:"Point",
+        coordinates:[
+            lon,
+            lat
+        ]
+    };
     await newListing.save();
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
@@ -45,12 +67,21 @@ module.exports.renderEditForm = async (req,res)=>{
         req.flash("error", "listing you requested for does not exist!");
         return res.redirect("/listings");
     }
-    res.render("listings/edit.ejs", {listing});
+    let OriginalImageUrl = listing.image.url;
+    OriginalImageUrl = OriginalImageUrl.replace("/upload", "/upload/w_250");
+    res.render("listings/edit.ejs", {listing, OriginalImageUrl});
 };
 
 module.exports.updateListing = async (req,res) => {
     let {id} = req.params;
-    await Listing.findByIdAndUpdate(id, {...req.body.listing});
+    let listing = await Listing.findByIdAndUpdate(id, {...req.body.listing});
+
+    if(typeof req.file !== "undefined"){
+        let url = req.file.path;
+        let filename = req.file.filename;
+        listing.image = {url, filename};
+        await listing.save();
+    }
     req.flash("success", "Listing Updated");
     res.redirect(`/listings/${id}`);
 };

@@ -112,3 +112,10 @@ body {
  .card{
     height:220px;
  }
+
+ #map {
+    height: 400px;
+    width: 80%;
+    border-radius: 12px;
+    margin-top: 1rem;
+}
