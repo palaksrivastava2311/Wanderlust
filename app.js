@@ -10,7 +10,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
-
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -41,9 +41,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
-
-
-console.log(MongoStore);
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
@@ -128,6 +125,7 @@ app.use((err,req,res,next)=>{
     // res.status(statusCode).send(message);
 });
 
-app.listen(8080, ()=>{
-    console.log("server is listening to port 8080");
+const PORT = process.env.PORT || 8080;
+app.listen(PORT,()=>{
+    console.log(`Server is listening on port ${PORT}`);
 });
