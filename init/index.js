@@ -1,9 +1,10 @@
+if (process.env.NODE_ENV != "production") {
+    require("dotenv").config();
+}
 const axios = require("axios");
 const mongoose = require("mongoose");
 const initData =  require("./data.js");
 const Listing = require("../models/listing.js");
-const GEOAPIFY_API_KEY = "f1d27e3d6868449cabcc7b47660fb8e9";
-
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
@@ -19,7 +20,7 @@ async function main() {
   }
 
 async function getCoordinates(location) {
-    const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(location)}&apiKey=${GEOAPIFY_API_KEY}`;
+    const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(location)}&apiKey=${process.env.GEOAPIFY_KEY}`;
 
     try {
         const response = await axios.get(url);
