@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV != "production"){
+	require('dotenv').config({path: "../.env"});
+}
 const axios = require("axios");
 const mongoose = require("mongoose");
 const initData =  require("./data.js");
